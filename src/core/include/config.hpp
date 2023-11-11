@@ -46,8 +46,7 @@ struct Dependencies {
 struct Aliases {
   StringPair aliases;
 
-  static std::optional<Aliases> constructOptionally(
-    const StringPair& aliases);
+  static std::optional<Aliases> constructOptionally(const StringPair& aliases);
 };
 
 struct Config {

@@ -61,7 +61,8 @@ std::optional<Config> Config::load(const std::string &path) {
       toml::find_or<BasicValue>(config, "release", {}));
   s_config.dependencies = Dependencies::constructOptionally(
       toml::find_or<StringPair>(config, "dependencies", {}));
-  s_config.aliases = Aliases::constructOptionally(toml::find_or<StringPair>(config, "aliases", {}));
+  s_config.aliases = Aliases::constructOptionally(
+      toml::find_or<StringPair>(config, "aliases", {}));
   return std::optional<Config>(s_config);
 }
 
