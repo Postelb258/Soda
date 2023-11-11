@@ -76,9 +76,3 @@ std::vector<std::string> getFlagsForCLANG(Config *config,
 
   return flags;
 }
-
-std::vector<std::string> getFlagsForMSVC(Config *config, BuildMode build_mode) {
-  std::vector<std::string> flags;
-
-  return flags;
-}
