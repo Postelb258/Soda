@@ -12,9 +12,10 @@
 class Clang : public CompilationStrategy {
  private:
   std::unique_ptr<Config> m_config;
+  BuildMode m_mode;
 
  public:
-  Clang(std::unique_ptr<Config> config);
+  Clang(std::unique_ptr<Config> config, BuildMode build_mode);
   void build() override;
   void link() override;
   void run() override;

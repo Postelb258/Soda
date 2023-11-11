@@ -1,6 +1,8 @@
 #ifndef __COMPILATION_H
 #define __COMPILATION_H
 
+enum BuildMode { debug, release };
+
 class LinkStrategy {
  public:
   virtual void makeExecutable() = 0;

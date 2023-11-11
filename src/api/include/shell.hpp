@@ -24,4 +24,8 @@ class Shell {
   void run();
 };
 
+std::vector<std::string> getFlagsForGNU(Config* config, BuildMode build_mode);
+std::vector<std::string> getFlagsForCLANG(Config* config, BuildMode build_mode);
+std::vector<std::string> getFlagsForMSVC(Config* config, BuildMode build_mode);
+
 #endif
