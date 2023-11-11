@@ -12,7 +12,7 @@ class Build : public Subcommand {
   BuildMode m_mode;
 
  public:
-  Build(std::unique_ptr<Config> config, BuildMode build_mode);
+  Build(std::unique_ptr<Config> config);
   CLI::App* setup(CLI::App& app) override;
   void handle() override;
 };
