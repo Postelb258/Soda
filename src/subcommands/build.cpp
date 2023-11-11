@@ -1,6 +1,6 @@
 #include "include/build.hpp"
 
-Build::Build(std::unique_ptr<Config> config, BuildMode build_mode)
+Build::Build(std::unique_ptr<Config> config)
     : m_config(std::move(config)), m_mode(BuildMode::debug) {}
 
 CLI::App* Build::setup(CLI::App& app) {
