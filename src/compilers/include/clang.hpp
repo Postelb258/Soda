@@ -15,7 +15,6 @@ class Clang : public CompilationStrategy {
   Clang(std::unique_ptr<Config> config, BuildMode build_mode);
   void build() override;
   void link() override;
-  void run() override;
 };
 
 #endif

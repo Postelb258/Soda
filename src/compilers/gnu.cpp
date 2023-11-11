@@ -49,5 +49,3 @@ void GNU::build() {
 }
 
 void GNU::link() {}
-
-void GNU::run() {}

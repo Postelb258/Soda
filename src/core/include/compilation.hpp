@@ -14,7 +14,6 @@ class CompilationStrategy {
  public:
   virtual void build() = 0;
   virtual void link() = 0;
-  virtual void run() = 0;
 };
 
 #endif

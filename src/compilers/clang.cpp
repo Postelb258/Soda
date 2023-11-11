@@ -50,5 +50,3 @@ void Clang::build() {
 }
 
 void Clang::link() {}
-
-void Clang::run() {}
