@@ -16,16 +16,11 @@ void Clang::build() {
   std::string mode_dir =
       this->m_mode == BuildMode::release ? "release" : "debug";
   std::filesystem::path target("target/__objs/" + mode_dir + "/");
-  try {
-    std::error_code ec;
-    std::filesystem::create_directories(target, ec);
-    if (ec) {
-      throw std::runtime_error("[error] Failed to create `target`: " +
-                               ec.message());
-    }
-  } catch (const std::runtime_error& e) {
-    std::cerr << e.what() << std::endl;
-    std::exit(1);
+  std::error_code ec;
+  std::filesystem::create_directories(target, ec);
+  if (ec) {
+    throw std::runtime_error("[error] Failed to create `target`: " +
+                             ec.message());
   }
 
   std::vector<std::filesystem::path> source_files = matchFiles(
