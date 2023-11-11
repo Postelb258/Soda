@@ -1,8 +1,5 @@
 #include "include/new.hpp"
 
-#include <stdexcept>
-#include <system_error>
-
 New::New() {}
 
 CLI::App *New::setup(CLI::App &app) {
@@ -41,6 +38,7 @@ void New::handle() {
   std::filesystem::path entry_path(this->m_path + "/" + src + "/main." + cxx);
   std::ofstream entry_file(entry_path);
 
+  std::string lib_table = this->m_lib ? "[lib]" : "";
   if (config_file.is_open() && entry_file.is_open()) {
     config_file << "[package]\n"
                    "name = " +
@@ -49,7 +47,8 @@ void New::handle() {
                        "entry = main." +
                        cxx +
                        "\n"
-                       "version = 0.1.0"
+                       "version = 0.1.0\n" +
+                       lib_table
                 << std::endl;
     entry_file << "#include <stdio.h>\n"
                   "\n"

@@ -2,6 +2,8 @@
 #define __NEW_SUBCMD_H
 
 #include "../../core/include/cli.hpp"
+#include <stdexcept>
+#include <system_error>
 #include <fstream>
 #include <bits/stdc++.h>
 #include <sys/stat.h>
