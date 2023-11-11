@@ -29,24 +29,49 @@ void Shell::run() {
 std::vector<std::string> getFlagsForGNU(Config *config, BuildMode build_mode) {
   std::vector<std::string> flags;
 
+  if (build_mode == BuildMode::debug) {
+    if (!config->debug) {
+      flags = {"-Wall", "-Wextra", "-Wunreachable-code", "-g", "-O0"};
+    } else if (config->debug) {
+      flags = {"-Wall", "-Wextra", "-Wunreachable-code", "-g", "-O0"};
+    }
+  }
+
+  if (build_mode == BuildMode::release) {
+    if (!config->release) {
+      flags = {"-Wall", "-Wextra", "-Wunreachable-code", "-DNDEBUG", "-O3"};
+    } else if (config->release) {
+      std::string optimization =
+          "-O" + std::to_string(config->release->optimization);
+      flags = {"-Wall", "-Wextra", "-Wunreachable-code", "-DNDEBUG",
+               optimization};
+    }
+  }
   return flags;
 }
 
 std::vector<std::string> getFlagsForCLANG(Config *config,
                                           BuildMode build_mode) {
   std::vector<std::string> flags;
-  if (build_mode == BuildMode::debug && !config->debug) {
-    flags = {"-g", "-O0", "-fno-omit-frame-pointer"};
-  } else if (build_mode == BuildMode::debug && config->debug) {
-    flags = {"-g", "-O0", "-fno-omit-frame-pointer"};
+
+  if (build_mode == BuildMode::debug) {
+    if (!config->debug) {
+      flags = {"-Wall", "-Wextra", "-Wunreachable-code",
+               "-g",    "-O0",     "-fno-omit-frame-pointer"};
+    } else if (config->debug) {
+      flags = {"-Wall", "-Wextra", "-Wunreachable-code",
+               "-g",    "-O0",     "-fno-omit-frame-pointer"};
+    }
   }
 
-  if (build_mode == BuildMode::release && !config->release) {
-    flags = {"-03", "-flto"};
-  } else if (build_mode == BuildMode::release && config->release) {
-    std::string optimization =
-        "-O" + std::to_string(config->release->optimization);
-    flags = {optimization, "-flto"};
+  if (build_mode == BuildMode::release) {
+    if (!config->release) {
+      flags = {"-Wall", "-Wextra", "-Wunreachable-code", "-03", "-flto"};
+    } else if (config->release) {
+      std::string optimization =
+          "-O" + std::to_string(config->release->optimization);
+      flags = {"-Wall", "-Wextra", "-Wunreachable-code", optimization, "-flto"};
+    }
   }
 
   return flags;
