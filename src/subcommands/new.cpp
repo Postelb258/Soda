@@ -41,19 +41,21 @@ void New::handle() {
   std::string lib_table = this->m_lib ? "[lib]" : "";
   if (config_file.is_open() && entry_file.is_open()) {
     config_file << "[package]\n"
-                   "name = " +
+                   "name = \"" +
                        dirs_path.parent_path().filename().generic_string() +
+                       "\""
                        "\n"
-                       "entry = main." +
+                       "entry = \"main." +
                        cxx +
+                       "\""
                        "\n"
-                       "version = 0.1.0\n" +
+                       "version = \"0.1.0\"\n" +
                        lib_table
                 << std::endl;
     entry_file << "#include <stdio.h>\n"
                   "\n"
                   "int main(void) {\n"
-                  "printf(\"Hi, dad\");\n"
+                  "\tprintf(\"Hi, dad\");\n"
                   "\treturn 0;\n"
                   "}"
                << std::endl;
