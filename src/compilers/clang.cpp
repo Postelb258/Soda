@@ -36,9 +36,10 @@ void Clang::build() {
   Shell* shell = new Shell("clang");
   for (const auto& source_file : source_files) {
     shell->addArg("-x");
-    shell->addArg(cxx.find("pp")
-                      ? cxx.replace(cxx.find("pp"), sizeof("pp") - 1, "++")
-                      : cxx);
+    shell->addArg(((cxx.find("pp") != std::string::npos)
+                       ? cxx.replace(cxx.find("pp"), sizeof("pp") - 1, "++")
+                       : cxx)
+                      .erase(0, 1));
     shell->addArgs(flags);
     shell->addArg("-c");
     shell->addArg(source_file.generic_string());
