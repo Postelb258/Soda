@@ -20,16 +20,11 @@ void New::handle() {
   std::string cxx = this->m_cxx ? "cpp" : "c";
 
   std::filesystem::path dirs_path(this->m_path + "/" + src);
-  try {
-    std::error_code ec;
-    std::filesystem::create_directories(dirs_path, ec);
-    if (ec) {
-      throw std::runtime_error("[error] Failed to create directories: " +
-                               ec.message());
-    }
-  } catch (const std::runtime_error &e) {
-    std::cerr << e.what() << std::endl;
-    std::exit(1);
+  std::error_code ec;
+  std::filesystem::create_directories(dirs_path, ec);
+  if (ec) {
+    throw std::runtime_error("[error] Failed to create directories: " +
+                             ec.message());
   }
 
   std::filesystem::path config_path(this->m_path + "/Soda.toml");
