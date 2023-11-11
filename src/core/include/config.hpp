@@ -3,14 +3,9 @@
 
 #include <sys/stat.h>
 
-#include <cstdint>
 #include <optional>
 #include <string>
-#include <string_view>
 #include <toml.hpp>
-#include <toml/get.hpp>
-#include <toml/types.hpp>
-#include <toml/utility.hpp>
 
 typedef toml::basic_value<toml::discard_comments, std::unordered_map,
                           std::vector>
@@ -23,30 +18,27 @@ struct Package {
   std::optional<std::string_view> description;
 
   Package() = default;
-  Package(const BasicValue& config, const BasicValue& package);
+  Package(const BasicValue& package);
 };
 
 struct Lib {
-  static std::optional<Lib> constructOptionally(const BasicValue& config,
-                                                const BasicValue& lib);
+  static std::optional<Lib> constructOptionally(const BasicValue& lib);
 };
 
 struct Debug {
-  static std::optional<Debug> constructOptionally(const BasicValue& config,
-                                                  const BasicValue& debug);
+  static std::optional<Debug> constructOptionally(const BasicValue& debug);
 };
 
 struct Release {
   uint8_t optimization;
-  static std::optional<Release> constructOptionally(const BasicValue& config,
-                                                    const BasicValue& release);
+  static std::optional<Release> constructOptionally(const BasicValue& release);
 };
 
 struct Dependencies {
   std::pair<std::string_view, std::string_view> deps;
 
   static std::optional<Dependencies> constructOptionally(
-      const BasicValue& config, const BasicValue& dependencies);
+      const BasicValue& dependencies);
 };
 
 struct Config {
