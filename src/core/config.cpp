@@ -15,10 +15,8 @@ std::optional<Lib> Lib::constructOptionally(
     const BasicValue &lib
     ) {
     std::optional<Lib> s_lib;
-    if (!config.contains("lib"))
-        return s_lib;
-
-    s_lib = Lib {};
+    if (config.contains("lib"))
+         s_lib = Lib {};
 
     return s_lib;
 }
@@ -27,10 +25,8 @@ std::optional<Debug> Debug::constructOptionally(
     const BasicValue &config, const BasicValue &debug
     ) {
     std::optional<Debug> s_debug;
-    if (!config.contains("debug"))
-        return s_debug;
-
-    s_debug = Debug {}; 
+    if (config.contains("debug"))
+        s_debug = Debug {}; 
 
     return s_debug;
 }
@@ -40,11 +36,10 @@ std::optional<Release> Release::constructOptionally(
     const BasicValue &release
     ) {
     std::optional<Release> s_release;
-    if (!config.contains("release"))
-        return s_release;
-
-    uint8_t optimization = toml::find_or(release, "optimization", 2);
-    s_release = Release { .optimization = optimization };
+    if (config.contains("release")) {
+        uint8_t optimization = toml::find_or(release, "optimization", 2);
+        s_release = Release { .optimization = optimization };
+    }
 
     return s_release;
 }
@@ -54,12 +49,11 @@ std::optional<Dependencies> Dependencies::constructOptionally(
     const BasicValue &dependencies
     ) {
     std::optional<Dependencies> s_dependencies;
-    if (!config.contains("dependencies"))
-        return s_dependencies;
-    
-    auto dependencies_map = toml::find_or<
-    std::pair<std::string_view, std::string_view>>(dependencies, "dependencies", {});
-    s_dependencies = Dependencies { .deps = dependencies_map };
+    if (config.contains("dependencies")) {
+        auto dependencies_map = toml::find_or<
+        std::pair<std::string_view, std::string_view>>(dependencies, "dependencies", {});
+        s_dependencies = Dependencies { .deps = dependencies_map };
+    }
 
     return s_dependencies;
 }
