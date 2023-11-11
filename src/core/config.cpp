@@ -43,15 +43,13 @@ std::optional<Aliases> Aliases::constructOptionally(const StringPair &aliases) {
   return std::optional<Aliases>({.aliases = aliases});
 }
 
-std::optional<Config> Config::load(const std::string &path) {
+std::unique_ptr<Config> Config::load(const std::string &path) {
   Config s_config;
   struct stat info;
 
-  if (stat(path.c_str(), &info) != 0) {
-    return std::optional<Config>();
-  };
+  if (stat(path.c_str(), &info) != 0) return nullptr;
 
-  auto config = toml::parse(path);
+  BasicValue config = toml::parse(path);
   s_config.package = Package(toml::find<BasicValue>(config, "package"));
   s_config.lib =
       Lib::constructOptionally(toml::find_or<BasicValue>(config, "lib", {}));
@@ -63,13 +61,5 @@ std::optional<Config> Config::load(const std::string &path) {
       toml::find_or<StringPair>(config, "dependencies", {}));
   s_config.aliases = Aliases::constructOptionally(
       toml::find_or<StringPair>(config, "aliases", {}));
-  return std::optional<Config>(s_config);
-}
-
-std::unique_ptr<Config> Config::getLoaded(
-    const std::optional<Config> &opt_config) {
-  if (opt_config.has_value())
-    return std::make_unique<Config>(opt_config.value());
-  else
-    return nullptr;
+  return std::make_unique<Config>(s_config);
 }
