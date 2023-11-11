@@ -8,9 +8,9 @@
 
 class New : public Subcommand {
 private:
-    std::string path;
-    bool lib;
-    bool cxx;
+    std::string m_path;
+    bool m_lib;
+    bool m_cxx;
 public:
     New();
     CLI::App* setup(CLI::App& app) override;
