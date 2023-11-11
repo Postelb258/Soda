@@ -1,8 +1,6 @@
 #include "include/clang.hpp"
 
-#include <stdexcept>
-
-Clang::Clang(std::unique_ptr<Config> config, BuildMode build_mode) : m_config(std::move(config)), m_buildmode(build_mode) {}
+Clang::Clang(std::unique_ptr<Config> config) : m_config(std::move(config)) {}
 
 void Clang::build() {
   if (this->m_config == nullptr)
@@ -11,12 +9,8 @@ void Clang::build() {
   std::string source = this->m_config->lib ? "lib" : "src";
   std::string cxx =
       std::filesystem::path(this->m_config->package.entry).extension();
-  std::vector<std::string> flags 
-      = getFlagsForClang(this->m_config.get(), this->m_buildmode);
 
-  std::string mode_dir = this->m_buildmode == BuildMode::release ? "/release" : "/debug";
-
-  std::filesystem::path target("target/__objs" + mode_dir + "/");
+  std::filesystem::path target("target/__objs/");
   try {
     std::error_code ec;
     std::filesystem::create_directories(target, ec);
@@ -29,8 +23,8 @@ void Clang::build() {
     std::exit(1);
   }
 
-  std::vector<std::filesystem::path> source_files =
-      matchFiles(source, [cxx](const std::filesystem::path& entry) {
+  std::vector<std::filesystem::path> source_files = matchFiles(
+      std::filesystem::path(source), [cxx](const std::filesystem::path& entry) {
         return entry.extension() == cxx;
       });
 
@@ -43,8 +37,8 @@ void Clang::build() {
     shell->addArg("-c");
     shell->addArg(source_file.generic_string());
     shell->addArg("-o");
-    shell->addArg(target.generic_string() + source_file.stem().generic_string() +
-                  ".o");
+    shell->addArg(target.generic_string() +
+                  source_file.stem().generic_string() + ".o");
 
     shell->run();
     shell->removeArgs();
