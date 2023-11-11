@@ -91,3 +91,10 @@ std::optional<Config> Config::load(const std::string& path) {
 
     return s_config;
 }
+
+std::unique_ptr<Config> Config::getLoaded(const std::optional<Config> &opt_config) {
+    if (opt_config.has_value()) 
+        return std::make_unique<Config>(opt_config.value());
+    else
+        return nullptr;
+}

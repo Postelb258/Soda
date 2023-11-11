@@ -51,6 +51,7 @@ struct Config {
     std::optional<Dependencies> dependencies;
 
     static std::optional<Config> load(const std::string& path);
+    static std::unique_ptr<Config> getLoaded(const std::optional<Config>& opt_config);
 };
 
 
