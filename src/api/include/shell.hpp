@@ -1,11 +1,7 @@
 #ifndef __SHELL_H
 #define __SHELL_H
 
-#include <cstdint>
-#include <functional>
 #include <numeric>
-#include <string>
-#include <vector>
 
 #include "../../core/include/compilation.hpp"
 #include "../../core/include/config.hpp"
