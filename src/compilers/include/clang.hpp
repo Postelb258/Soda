@@ -1,8 +1,6 @@
 #ifndef __CLANG_COMPILER_H
 #define __CLANG_COMPILER_H
 
-#include <iostream>
-
 #include "../../api/include/fs.hpp"
 #include "../../api/include/shell.hpp"
 #include "../../core/include/compilation.hpp"
