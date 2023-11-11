@@ -11,6 +11,8 @@ typedef toml::basic_value<toml::discard_comments, std::unordered_map,
                           std::vector>
     BasicValue;
 
+typedef std::pair<std::string_view, std::string_view> StringPair;
+
 struct Package {
   std::string_view name;
   std::string_view entry;
@@ -35,10 +37,17 @@ struct Release {
 };
 
 struct Dependencies {
-  std::pair<std::string_view, std::string_view> deps;
+  StringPair deps;
 
   static std::optional<Dependencies> constructOptionally(
-      const BasicValue& dependencies);
+      const StringPair& dependencies);
+};
+
+struct Aliases {
+  StringPair aliases;
+
+  static std::optional<Aliases> constructOptionally(
+    const StringPair& aliases);
 };
 
 struct Config {
@@ -47,6 +56,7 @@ struct Config {
   std::optional<Debug> debug;
   std::optional<Release> release;
   std::optional<Dependencies> dependencies;
+  std::optional<Aliases> aliases;
 
   static std::optional<Config> load(const std::string& path);
   static std::unique_ptr<Config> getLoaded(

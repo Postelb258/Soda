@@ -34,16 +34,13 @@ std::optional<Release> Release::constructOptionally(const BasicValue &release) {
 }
 
 std::optional<Dependencies> Dependencies::constructOptionally(
-    const BasicValue &dependencies) {
-  std::optional<Dependencies> s_dependencies;
-  if (dependencies.is_table()) {
-    auto dependencies_map =
-        toml::find_or<std::pair<std::string_view, std::string_view>>(
-            dependencies, "dependencies", {});
-    s_dependencies = Dependencies{.deps = dependencies_map};
-  }
+    const StringPair &dependencies) {
+  return std::optional<Dependencies>({.deps = dependencies});
+}
 
-  return s_dependencies;
+std::optional<Aliases> Aliases::constructOptionally(const StringPair &aliases) {
+  std::optional<Aliases> s_aliases;
+  return std::optional<Aliases>({.aliases = aliases});
 }
 
 std::optional<Config> Config::load(const std::string &path) {
@@ -63,8 +60,8 @@ std::optional<Config> Config::load(const std::string &path) {
   s_config.release = Release::constructOptionally(
       toml::find_or<BasicValue>(config, "release", {}));
   s_config.dependencies = Dependencies::constructOptionally(
-      toml::find_or<BasicValue>(config, "dependencies", {}));
-
+      toml::find_or<StringPair>(config, "dependencies", {}));
+  s_config.aliases = Aliases::constructOptionally(toml::find_or<StringPair>(config, "aliases", {}));
   return std::optional<Config>(s_config);
 }
 
