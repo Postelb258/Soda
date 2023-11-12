@@ -1,6 +1,7 @@
 #ifndef __COMPILATION_H
 #define __COMPILATION_H
 
+#include <memory>
 #ifdef _WIN32
 #define EXE_EXTENSION ".exe"
 #define SHARED_LIBRARY_EXTENSION ".dll"
@@ -37,7 +38,7 @@ class LinkStrategy {
 class CompilationStrategy {
  public:
   virtual void build() = 0;
-  virtual void link() = 0;
+  virtual std::shared_ptr<LinkStrategy> link() = 0;
 };
 
 #endif
