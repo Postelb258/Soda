@@ -14,5 +14,6 @@ CLI::App* Build::setup(CLI::App& app) {
 void Build::handle() {
   Clang* clang = new Clang(std::move(this->m_config), this->m_mode);
   clang->build();
-  free(clang);
+  clang->link()->makeExecutable();
+  delete clang;
 }
