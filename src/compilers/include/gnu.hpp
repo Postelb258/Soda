@@ -14,13 +14,19 @@ class GNU : public CompilationStrategy {
  public:
   GNU(std::unique_ptr<Config> config, BuildMode build_mode);
   void build() override;
-  void link() override;
+  std::shared_ptr<LinkStrategy> link() override;
 };
 
 class GNULink : public LinkStrategy {
  private:
+  std::filesystem::path m_location;
+  std::unique_ptr<Config> m_config;
+  Shell* m_shell;
+
  public:
-  GNULink();
+  GNULink(std::unique_ptr<Config> config, Shell* shell,
+          const std::string& mode_dir);
+  virtual ~GNULink();
   void makeExecutable();
   void makeStaticLibrary();
   void makeSharedLibrary();

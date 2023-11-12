@@ -1,5 +1,7 @@
 #include "include/clang.hpp"
 
+#include <string>
+
 Clang::Clang(std::unique_ptr<Config> config, BuildMode build_mode)
     : m_config(std::move(config)), m_mode(build_mode) {}
 
@@ -15,7 +17,7 @@ void Clang::build() {
 
   std::string mode_dir =
       this->m_mode == BuildMode::release ? "release" : "debug";
-  std::filesystem::path target("target/__objs/" + mode_dir + "/");
+  std::filesystem::path target("target/" + mode_dir + "/__objs/");
   std::error_code ec;
   std::filesystem::create_directories(target, ec);
   if (ec) {
@@ -49,12 +51,45 @@ void Clang::build() {
   delete shell;
 }
 
-void Clang::link() {}
+std::shared_ptr<LinkStrategy> Clang::link() {
+  std::string mode_dir =
+      this->m_mode == BuildMode::release ? "release" : "debug";
+  std::vector<std::filesystem::path> object_file_paths = matchFiles(
+      "target/" + mode_dir + "/__objs", [](const std::filesystem::path& entry) {
+        return entry.extension() == ".o";
+      });
 
-ClangLink::ClangLink() {}
+  Shell* shell = new Shell("clang");
+  for (auto& object_path : object_file_paths) {
+    shell->addArg(object_path.generic_string());
+  }
+  shell->addArg("-o");
+  return std::make_unique<ClangLink>(std::move(this->m_config), shell,
+                                     mode_dir);
+}
 
-void ClangLink::makeExecutable() {}
+ClangLink::ClangLink(std::unique_ptr<Config> config, Shell* shell,
+                     const std::string& mode_dir)
+    : m_config(std::move(config)),
+      m_shell(shell),
+      m_location(std::filesystem::path("target/" + mode_dir + "/")) {}
+ClangLink::~ClangLink() { delete this->m_shell; }
 
-void ClangLink::makeStaticLibrary() {}
+void ClangLink::makeExecutable() {
+  this->m_shell->addArg(this->m_location.generic_string() +
+                        std::string(this->m_config->package.name) +
+                        EXE_EXTENSION);
+  this->m_shell->run();
+}
 
-void ClangLink::makeSharedLibrary() {}
+void ClangLink::makeStaticLibrary() {
+  this->m_shell->addArg(this->m_location.generic_string() +
+                        std::string(this->m_config->package.name) +
+                        STATIC_LIBRARY_EXTENSION);
+}
+
+void ClangLink::makeSharedLibrary() {
+  this->m_shell->addArg(this->m_location.generic_string() +
+                        std::string(this->m_config->package.name) +
+                        SHARED_LIBRARY_EXTENSION);
+}

@@ -15,7 +15,7 @@ void GNU::build() {
 
   std::string mode_dir =
       this->m_mode == BuildMode::release ? "release" : "debug";
-  std::filesystem::path target("target/__objs/" + mode_dir + "/");
+  std::filesystem::path target("target/" + mode_dir + "/__objs/");
   std::error_code ec;
   std::filesystem::create_directories(target, ec);
   if (ec) {
@@ -48,12 +48,44 @@ void GNU::build() {
   delete shell;
 }
 
-void GNU::link() {}
+std::shared_ptr<LinkStrategy> GNU::link() {
+  std::string mode_dir =
+      this->m_mode == BuildMode::release ? "release" : "debug";
+  std::vector<std::filesystem::path> object_file_paths = matchFiles(
+      "target/" + mode_dir + "/__objs", [](const std::filesystem::path& entry) {
+        return entry.extension() == ".o";
+      });
 
-GNULink::GNULink() {}
+  Shell* shell = new Shell("gcc");
+  for (auto& object_path : object_file_paths) {
+    shell->addArg(object_path.generic_string());
+  }
+  shell->addArg("-o");
+  return std::make_unique<GNULink>(std::move(this->m_config), shell, mode_dir);
+}
 
-void GNULink::makeExecutable() {}
+GNULink::GNULink(std::unique_ptr<Config> config, Shell* shell,
+                 const std::string& mode_dir)
+    : m_config(std::move(config)),
+      m_shell(shell),
+      m_location(std::filesystem::path("target/" + mode_dir + "/")) {}
+GNULink::~GNULink() { delete this->m_shell; }
 
-void GNULink::makeStaticLibrary() {}
+void GNULink::makeExecutable() {
+  this->m_shell->addArg(this->m_location.generic_string() +
+                        std::string(this->m_config->package.name) +
+                        EXE_EXTENSION);
+  this->m_shell->run();
+}
 
-void GNULink::makeSharedLibrary() {}
+void GNULink::makeStaticLibrary() {
+  this->m_shell->addArg(this->m_location.generic_string() +
+                        std::string(this->m_config->package.name) +
+                        EXE_EXTENSION);
+}
+
+void GNULink::makeSharedLibrary() {
+  this->m_shell->addArg(this->m_location.generic_string() +
+                        std::string(this->m_config->package.name) +
+                        EXE_EXTENSION);
+}
