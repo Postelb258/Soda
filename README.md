@@ -14,7 +14,7 @@
 
 As you installed the **Soda** executable, you can use it to create a project by:
 
-```bash
+```console
 
 soda new PATH
 
