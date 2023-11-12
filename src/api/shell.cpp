@@ -10,7 +10,7 @@ void Shell::addArgs(const std::vector<std::string> &args) {
   this->m_args.insert(this->m_args.end(), args.begin(), args.end());
 }
 
-void Shell::removeArgs() { this->m_args.clear(); }
+void Shell::flushArgs() { this->m_args.clear(); }
 
 std::string Shell::cocain_args(const std::string &delimiter) {
   return std::accumulate(
