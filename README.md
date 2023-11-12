@@ -1,4 +1,4 @@
-<div align="center"># Soda🥤
+<div align="center"># Soda🥤</div>
 
 ![License](https://img.shields.io/github/license/Postelb258/Soda.svg?style=flat) ![Commit Activity](https://img.shields.io/github/commit-activity/w/Postelb258/Soda) ![Version](https://img.shields.io/badge/version-0.1.0-blue)
 
