@@ -17,4 +17,13 @@ class Clang : public CompilationStrategy {
   void link() override;
 };
 
+class ClangLink : public LinkStrategy {
+ private:
+ public:
+  ClangLink();
+  void makeExecutable();
+  void makeStaticLibrary();
+  void makeSharedLibrary();
+};
+
 #endif

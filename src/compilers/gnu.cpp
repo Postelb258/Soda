@@ -42,10 +42,18 @@ void GNU::build() {
     shell->addArg(source_file.filename());
 
     shell->run();
-    shell->removeArgs();
+    shell->flushArgs();
   }
 
   delete shell;
 }
 
 void GNU::link() {}
+
+GNULink::GNULink() {}
+
+void GNULink::makeExecutable() {}
+
+void GNULink::makeStaticLibrary() {}
+
+void GNULink::makeSharedLibrary() {}

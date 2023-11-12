@@ -43,10 +43,18 @@ void Clang::build() {
                   source_file.stem().generic_string() + ".o");
 
     shell->run();
-    shell->removeArgs();
+    shell->flushArgs();
   }
 
   delete shell;
 }
 
 void Clang::link() {}
+
+ClangLink::ClangLink() {}
+
+void ClangLink::makeExecutable() {}
+
+void ClangLink::makeStaticLibrary() {}
+
+void ClangLink::makeSharedLibrary() {}

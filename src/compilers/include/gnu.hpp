@@ -17,4 +17,13 @@ class GNU : public CompilationStrategy {
   void link() override;
 };
 
+class GNULink : public LinkStrategy {
+ private:
+ public:
+  GNULink();
+  void makeExecutable();
+  void makeStaticLibrary();
+  void makeSharedLibrary();
+};
+
 #endif

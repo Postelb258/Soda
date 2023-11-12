@@ -13,6 +13,7 @@ typedef toml::basic_value<toml::discard_comments, std::unordered_map,
 
 typedef std::pair<std::string_view, std::string_view> StringPair;
 
+/// [package] in TOML Config
 struct Package {
   std::string_view name;
   std::string_view entry;
@@ -23,19 +24,23 @@ struct Package {
   Package(const BasicValue& package);
 };
 
+/// [lib] in TOML Config
 struct Lib {
   static std::optional<Lib> constructOptionally(const BasicValue& lib);
 };
 
+/// [debug] in TOML Config
 struct Debug {
   static std::optional<Debug> constructOptionally(const BasicValue& debug);
 };
 
+/// [release] in TOML Config
 struct Release {
   uint8_t optimization;
   static std::optional<Release> constructOptionally(const BasicValue& release);
 };
 
+/// [dependencies] in TOML Config
 struct Dependencies {
   StringPair deps;
 
@@ -43,12 +48,14 @@ struct Dependencies {
       const StringPair& dependencies);
 };
 
+/// [aliases] in TOML Config
 struct Aliases {
   StringPair aliases;
 
   static std::optional<Aliases> constructOptionally(const StringPair& aliases);
 };
 
+/// Deserialized TOML Config
 struct Config {
   Package package;
   std::optional<Lib> lib;
