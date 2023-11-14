@@ -12,7 +12,7 @@ void Shell::addArgs(const std::vector<std::string> &args) {
 
 void Shell::flushArgs() { this->m_args.clear(); }
 
-std::string Shell::cocain_args(const std::string &delimiter) {
+std::string Shell::joinArgs(const std::string &delimiter) {
   return std::accumulate(
       this->m_args.begin() + 1, this->m_args.end(), this->m_args[0],
       [&delimiter](const std::string &a, const std::string &b) {
@@ -21,7 +21,7 @@ std::string Shell::cocain_args(const std::string &delimiter) {
 }
 
 void Shell::run() {
-  std::string args = Shell::cocain_args(" ");
+  std::string args = Shell::joinArgs(" ");
   system(args.c_str());
 }
 

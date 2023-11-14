@@ -14,7 +14,7 @@ class Shell {
  private:
   std::string m_command;
   std::vector<std::string> m_args;
-  std::string cocain_args(const std::string& delimiter);
+  std::string joinArgs(const std::string& delimiter);
 
  public:
   /**
@@ -53,6 +53,13 @@ class Shell {
  * @return flags
  */
 std::vector<std::string> getFlagsForGNU(Config* config, BuildMode build_mode);
+/**
+ * @brief Get the Flags For Clang compiler according to build mode
+ *
+ * @param config
+ * @param build_mode
+ * @return flags
+ */
 std::vector<std::string> getFlagsForCLANG(Config* config, BuildMode build_mode);
 
 #endif
