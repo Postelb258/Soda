@@ -14,19 +14,18 @@ class Clang : public CompilationStrategy {
  public:
   Clang(std::unique_ptr<Config> config, BuildMode build_mode);
   void build() override;
-  std::shared_ptr<LinkStrategy> link() override;
+  std::unique_ptr<LinkStrategy> link() override;
 };
 
 class ClangLink : public LinkStrategy {
  private:
-  std::filesystem::path m_location;
+  fs_path m_location;
   std::unique_ptr<Config> m_config;
-  Shell* m_shell;
+  std::unique_ptr<Shell> m_shell;
 
  public:
-  ClangLink(std::unique_ptr<Config> config, Shell* shell,
-            const std::string& mode_dir);
-  virtual ~ClangLink();
+  ClangLink(std::unique_ptr<Config> config, std::unique_ptr<Shell> shell,
+            const str& mode_dir);
   void makeExecutable();
   void makeStaticLibrary();
   void makeSharedLibrary();

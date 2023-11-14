@@ -9,15 +9,15 @@ void Clang::build() {
   if (this->m_config == nullptr)
     throw std::runtime_error("Config file is not detected");
 
-  std::string source = this->m_config->lib ? "lib" : "src";
-  std::string cxx =
-      std::filesystem::path(this->m_config->package.entry).extension();
-  std::vector<std::string> flags =
+  str source = this->m_config->lib ? "lib" : "src";
+  str cxx =
+      fs_path(this->m_config->package.entry).extension();
+  vec<str> flags =
       getFlagsForCLANG(this->m_config.get(), this->m_mode);
 
-  std::string mode_dir =
+  str mode_dir =
       this->m_mode == BuildMode::release ? "release" : "debug";
-  std::filesystem::path target("target/" + mode_dir + "/__objs/");
+  fs_path target("target/" + mode_dir + "/__objs/");
   std::error_code ec;
   std::filesystem::create_directories(target, ec);
   if (ec) {
@@ -25,12 +25,12 @@ void Clang::build() {
                              ec.message());
   }
 
-  std::vector<std::filesystem::path> source_files = matchFiles(
-      std::filesystem::path(source), [cxx](const std::filesystem::path& entry) {
+  vec<fs_path> source_files = matchFiles(
+      fs_path(source), [cxx](const fs_path& entry) {
         return entry.extension() == cxx;
       });
 
-  Shell* shell = new Shell("clang");
+  std::unique_ptr<Shell> shell = std::make_unique<Shell>(Shell("clang"));
   for (const auto& source_file : source_files) {
     shell->addArg("-x");
     shell->addArg(((cxx.find("pp") != std::string::npos)
@@ -47,49 +47,46 @@ void Clang::build() {
     shell->run();
     shell->flushArgs();
   }
-
-  delete shell;
 }
 
-std::shared_ptr<LinkStrategy> Clang::link() {
-  std::string mode_dir =
+std::unique_ptr<LinkStrategy> Clang::link() {
+  str mode_dir =
       this->m_mode == BuildMode::release ? "release" : "debug";
-  std::vector<std::filesystem::path> object_file_paths = matchFiles(
-      "target/" + mode_dir + "/__objs", [](const std::filesystem::path& entry) {
+  vec<fs_path> object_file_paths = matchFiles(
+      "target/" + mode_dir + "/__objs", [](const fs_path& entry) {
         return entry.extension() == ".o";
       });
 
-  Shell* shell = new Shell("clang");
+  std::unique_ptr<Shell> shell = std::make_unique<Shell>(Shell("clang"));
   for (auto& object_path : object_file_paths) {
     shell->addArg(object_path.generic_string());
   }
   shell->addArg("-o");
-  return std::make_unique<ClangLink>(std::move(this->m_config), shell,
+  return std::make_unique<ClangLink>(std::move(this->m_config), std::move(shell),
                                      mode_dir);
 }
 
-ClangLink::ClangLink(std::unique_ptr<Config> config, Shell* shell,
-                     const std::string& mode_dir)
+ClangLink::ClangLink(std::unique_ptr<Config> config, std::unique_ptr<Shell> shell,
+                     const str& mode_dir)
     : m_config(std::move(config)),
-      m_shell(shell),
-      m_location(std::filesystem::path("target/" + mode_dir + "/")) {}
-ClangLink::~ClangLink() { delete this->m_shell; }
+      m_shell(std::move(shell)),
+      m_location(fs_path("target/" + mode_dir + "/")) {}
 
 void ClangLink::makeExecutable() {
   this->m_shell->addArg(this->m_location.generic_string() +
-                        std::string(this->m_config->package.name) +
+                        str(this->m_config->package.name) +
                         EXE_EXTENSION);
   this->m_shell->run();
 }
 
 void ClangLink::makeStaticLibrary() {
-  this->m_shell->addArg(this->m_location.generic_string() +
-                        std::string(this->m_config->package.name) +
-                        STATIC_LIBRARY_EXTENSION);
+  // this->m_shell->addArg(this->m_location.generic_string() +
+  //                       str(this->m_config->package.name) +
+  //                       STATIC_LIBRARY_EXTENSION);
 }
 
 void ClangLink::makeSharedLibrary() {
-  this->m_shell->addArg(this->m_location.generic_string() +
-                        std::string(this->m_config->package.name) +
-                        SHARED_LIBRARY_EXTENSION);
+  // this->m_shell->addArg(this->m_location.generic_string() +
+  //                       str(this->m_config->package.name) +
+  //                       SHARED_LIBRARY_EXTENSION);
 }
