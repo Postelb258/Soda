@@ -5,6 +5,7 @@
 #include "../../core/include/cli.hpp"
 #include "../../core/include/compilation.hpp"
 #include "../../core/include/config.hpp"
+#include "../../typedefs.hpp"
 
 class Build : public Subcommand {
  private:
@@ -13,7 +14,7 @@ class Build : public Subcommand {
 
  public:
   Build(std::unique_ptr<Config> config);
-  CLI::App* setup(CLI::App& app) override;
+  std::unique_ptr<CLI::App> setup(CLI::App& app) noexcept override;
   void handle() override;
 };
 

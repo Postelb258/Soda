@@ -2,6 +2,7 @@
 #define __NEW_SUBCMD_H
 
 #include "../../core/include/cli.hpp"
+#include "../../typedefs.hpp"
 
 class New : public Subcommand {
  private:
@@ -11,7 +12,7 @@ class New : public Subcommand {
 
  public:
   New();
-  CLI::App* setup(CLI::App& app) override;
+  std::unique_ptr<CLI::App> setup(CLI::App& app) noexcept override;
   void handle() override;
 };
 
