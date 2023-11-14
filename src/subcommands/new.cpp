@@ -2,8 +2,8 @@
 
 New::New() {}
 
-CLI::App *New::setup(CLI::App &app) {
-  CLI::App *sub = app.add_subcommand("new", "Creates a new Soda project");
+std::unique_ptr<CLI::App> New::setup(CLI::App& app) noexcept {
+  CLI::App* sub = app.add_subcommand("new", "Creates a new Soda project");
   sub->add_option("path", this->m_path, "Specifies the path of project")
       ->required(true)
       ->default_str(".");
@@ -12,14 +12,14 @@ CLI::App *New::setup(CLI::App &app) {
 
   sub->add_flag("--cxx", this->m_cxx, "Use a CXX template");
 
-  return sub;
+  return std::unique_ptr<CLI::App>(sub);
 }
 
 void New::handle() {
-  std::string src = this->m_lib ? "lib" : "src";
-  std::string cxx = this->m_cxx ? "cpp" : "c";
+  str src = this->m_lib ? "lib" : "src";
+  str cxx = this->m_cxx ? "cpp" : "c";
 
-  std::filesystem::path dirs_path(this->m_path + "/" + src);
+  fs_path dirs_path(this->m_path + "/" + src);
   std::error_code ec;
   std::filesystem::create_directories(dirs_path, ec);
   if (ec) {
@@ -27,13 +27,13 @@ void New::handle() {
                              ec.message());
   }
 
-  std::filesystem::path config_path(this->m_path + "/Soda.toml");
+  fs_path config_path(this->m_path + "/Soda.toml");
   std::ofstream config_file(config_path);
 
-  std::filesystem::path entry_path(this->m_path + "/" + src + "/main." + cxx);
+  fs_path entry_path(this->m_path + "/" + src + "/main." + cxx);
   std::ofstream entry_file(entry_path);
 
-  std::string lib_table = this->m_lib ? "[lib]" : "";
+  str lib_table = this->m_lib ? "[lib]" : "";
   if (config_file.is_open() && entry_file.is_open()) {
     config_file << "[package]\n"
                    "name = \"" +
