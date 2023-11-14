@@ -1,65 +1,68 @@
 #include "include/config.hpp"
 
-Package::Package(const BasicValue &package)
-    : name(toml::find<std::string_view>(package, "name")),
-      entry(toml::find<std::string_view>(package, "entry")),
-      version(toml::find<std::string_view>(package, "version")) {
-  if (package.contains("description")) {
-    description = toml::find<std::string_view>(package, "description");
-  }
+Package Package::deserialize(const opt<Table> &table) {
+  checkTable<Package>(table);
+
+  return Package{.name = table->required<sview>("name"),
+                 .entry = table->required<sview>("entry"),
+                 .version = table->required<sview>("version"),
+                 .description = table->optional<sview>("description")};
 }
 
-std::optional<Lib> Lib::constructOptionally(const BasicValue &lib) {
-  std::optional<Lib> s_lib;
-  if (lib.is_table()) s_lib = Lib{};
+opt<Lib> Lib::deserialize(const opt<Table> &table) {
+  checkTable<Lib>(table);
 
-  return s_lib;
+  return Lib{
+
+  };
 }
 
-std::optional<Debug> Debug::constructOptionally(const BasicValue &debug) {
-  std::optional<Debug> s_debug;
-  if (debug.is_table()) s_debug = Debug{};
+opt<Debug> Debug::deserialize(const opt<Table> &table) {
+  checkTable<Debug>(table);
 
-  return s_debug;
+  return Debug{.optimization = table->required<short>("optimization")};
 }
 
-std::optional<Release> Release::constructOptionally(const BasicValue &release) {
-  std::optional<Release> s_release;
-  if (release.is_table()) {
-    uint8_t optimization = toml::find_or(release, "optimization", 2);
-    s_release = Release{.optimization = optimization};
-  }
+opt<Release> Release::deserialize(const opt<Table> &table) {
+  checkTable<Release>(table);
 
-  return s_release;
+  return Release{.optimization = table->required<short>("optimization")};
 }
 
-std::optional<Dependencies> Dependencies::constructOptionally(
-    const StringPair &dependencies) {
-  return std::optional<Dependencies>({.deps = dependencies});
+opt<Dependencies> Dependencies::deserialize(const opt<Table> &table) {
+  checkTable<Dependencies>(table);
+
+  return Dependencies{.deps = table->required<smap>("dependencies")};
 }
 
-std::optional<Aliases> Aliases::constructOptionally(const StringPair &aliases) {
-  std::optional<Aliases> s_aliases;
-  return std::optional<Aliases>({.aliases = aliases});
+opt<Aliases> Aliases::deserialize(const opt<Table> &table) {
+  checkTable<Aliases>(table);
+
+  return Aliases{.aliases = table->required<smap>("aliases")};
+}
+
+template <typename S>
+S checkTable(const opt<Table> &table) {
+  if (!table.has_value()) return S{};
 }
 
 std::unique_ptr<Config> Config::load(const std::string &path) {
-  Config s_config;
   struct stat info;
-
   if (stat(path.c_str(), &info) != 0) return nullptr;
 
-  BasicValue config = toml::parse(path);
-  s_config.package = Package(toml::find<BasicValue>(config, "package"));
-  s_config.lib =
-      Lib::constructOptionally(toml::find_or<BasicValue>(config, "lib", {}));
-  s_config.debug = Debug::constructOptionally(
-      toml::find_or<BasicValue>(config, "debug", {}));
-  s_config.release = Release::constructOptionally(
-      toml::find_or<BasicValue>(config, "release", {}));
-  s_config.dependencies = Dependencies::constructOptionally(
-      toml::find_or<StringPair>(config, "dependencies", {}));
-  s_config.aliases = Aliases::constructOptionally(
-      toml::find_or<StringPair>(config, "aliases", {}));
+  Config s_config;
+  Table config_table = Table(toml::parse(path));
+  s_config.package =
+      Package::deserialize(config_table.required_table("package"));
+  s_config.lib = Lib::deserialize(config_table.optional_table("lib"));
+  s_config.debug =
+      Debug::deserialize(config_table.optional_table("debug").value());
+  s_config.release =
+      Release::deserialize(config_table.optional_table("release").value());
+  s_config.dependencies = Dependencies::deserialize(
+      config_table.optional_table("dependencies").value());
+  s_config.aliases =
+      Aliases::deserialize(config_table.optional_table("aliases").value());
+
   return std::make_unique<Config>(s_config);
 }

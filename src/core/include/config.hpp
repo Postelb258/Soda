@@ -3,66 +3,70 @@
 
 #include <sys/stat.h>
 
+#include <map>
+#include <memory>
 #include <optional>
 #include <string>
-#include <toml.hpp>
 
-typedef toml::basic_value<toml::discard_comments, std::unordered_map,
-                          std::vector>
-    BasicValue;
+#include "../../api/include/toml.hpp"
 
-typedef std::pair<std::string_view, std::string_view> StringPair;
+template <typename T>
+using opt = std::optional<T>;
 
 /// [package] in TOML Config
 struct Package {
-  std::string_view name;
-  std::string_view entry;
-  std::string_view version;
-  std::optional<std::string_view> description;
+  sview name;
+  sview entry;
+  sview version;
+  opt<sview> description;
 
-  Package() = default;
-  Package(const BasicValue& package);
+  static Package deserialize(const opt<Table>& table);
 };
 
 /// [lib] in TOML Config
 struct Lib {
-  static std::optional<Lib> constructOptionally(const BasicValue& lib);
+  static opt<Lib> deserialize(const opt<Table>& table);
 };
 
 /// [debug] in TOML Config
 struct Debug {
-  static std::optional<Debug> constructOptionally(const BasicValue& debug);
+  short optimization;
+
+  static opt<Debug> deserialize(const opt<Table>& table);
 };
 
 /// [release] in TOML Config
 struct Release {
-  uint8_t optimization;
-  static std::optional<Release> constructOptionally(const BasicValue& release);
+  short optimization;
+
+  static opt<Release> deserialize(const opt<Table>& table);
 };
 
 /// [dependencies] in TOML Config
 struct Dependencies {
-  StringPair deps;
+  smap deps;
 
-  static std::optional<Dependencies> constructOptionally(
-      const StringPair& dependencies);
+  static opt<Dependencies> deserialize(const opt<Table>& table);
 };
 
 /// [aliases] in TOML Config
 struct Aliases {
-  StringPair aliases;
+  smap aliases;
 
-  static std::optional<Aliases> constructOptionally(const StringPair& aliases);
+  static opt<Aliases> deserialize(const opt<Table>& table);
 };
+
+template <typename S>
+S checkTable(const opt<Table>& table);
 
 /// Deserialized TOML Config
 struct Config {
   Package package;
-  std::optional<Lib> lib;
-  std::optional<Debug> debug;
-  std::optional<Release> release;
-  std::optional<Dependencies> dependencies;
-  std::optional<Aliases> aliases;
+  opt<Lib> lib;
+  opt<Debug> debug;
+  opt<Release> release;
+  opt<Dependencies> dependencies;
+  opt<Aliases> aliases;
 
   static std::unique_ptr<Config> load(const std::string& path);
 };
