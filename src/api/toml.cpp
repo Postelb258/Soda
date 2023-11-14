@@ -2,11 +2,11 @@
 
 Table::Table(const BasicValue& table) : m_table(table) {}
 
-Table Table::required_table(const std::string& table) {
+Table Table::required_table(const std::string& table) const {
   return Table(toml::find<BasicValue>(this->m_table, table));
 }
 
-opt<Table> Table::optional_table(const std::string& table) {
+opt<Table> Table::optional_table(const std::string& table) const {
   opt<Table> table_;
   try {
     table_ = Table(toml::find<BasicValue>(this->m_table, table));

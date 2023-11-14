@@ -12,8 +12,8 @@ class Table {
 
  public:
   Table(const BasicValue& table);
-  Table required_table(const std::string& table);
-  opt<Table> optional_table(const std::string& table);
+  Table required_table(const std::string& table) const;
+  opt<Table> optional_table(const std::string& table) const;
   template <typename P>
   P required(const std::string& key) const;
   template <typename P>
