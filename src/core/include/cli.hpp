@@ -2,6 +2,7 @@
 #define __CLI_H
 
 #include <CLI11.hpp>
+
 #include "../../typedefs.hpp"
 
 /**
