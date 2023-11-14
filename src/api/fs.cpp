@@ -1,9 +1,9 @@
 #include "include/fs.hpp"
 
-std::vector<std::filesystem::path> matchFiles(
-    const std::filesystem::path& source,
-    const std::function<bool(const std::filesystem::path&)>& predicate) {
-  std::vector<std::filesystem::path> matched_paths;
+vec<fs_path> matchFiles(
+    const fs_path& source,
+    const std::function<bool(const fs_path&)> predicate) noexcept {
+  vec<fs_path> matched_paths;
 
   for (const auto& entry :
        std::filesystem::recursive_directory_iterator(source)) {

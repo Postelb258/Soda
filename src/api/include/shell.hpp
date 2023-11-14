@@ -5,6 +5,7 @@
 
 #include "../../core/include/compilation.hpp"
 #include "../../core/include/config.hpp"
+#include "../../typedefs.hpp"
 
 /**
  * @brief A builder class for Shell command execution
@@ -12,9 +13,9 @@
  */
 class Shell {
  private:
-  std::string m_command;
-  std::vector<std::string> m_args;
-  std::string joinArgs(const std::string& delimiter);
+  str m_command;
+  vec<str> m_args;
+  str joinArgs(const std::string& delimiter) noexcept;
 
  public:
   /**
@@ -22,27 +23,27 @@ class Shell {
    *
    * @param command shell command that will be executed
    */
-  Shell(const std::string& command);
+  Shell(const str& command) noexcept;
   /**
    * @brief add argument to command
    *
    * @param arg
    */
-  void addArg(const std::string& arg);
+  void addArg(const str& arg) noexcept;
   /**
    * @brief add the arguments to command
    *
    * @param args
    */
-  void addArgs(const std::vector<std::string>& args);
+  void addArgs(const vec<str>& args) noexcept;
   /**
    * @brief clear all arguments
    */
-  void flushArgs();
+  void flushArgs() noexcept;
   /**
    * @brief run shell command with arguments
    */
-  void run();
+  void run() noexcept;
 };
 
 /**
@@ -52,7 +53,7 @@ class Shell {
  * @param build_mode
  * @return flags
  */
-std::vector<std::string> getFlagsForGNU(Config* config, BuildMode build_mode);
+vec<str> getFlagsForGNU(Config* config, BuildMode build_mode) noexcept;
 /**
  * @brief Get the Flags For Clang compiler according to build mode
  *
@@ -60,6 +61,6 @@ std::vector<std::string> getFlagsForGNU(Config* config, BuildMode build_mode);
  * @param build_mode
  * @return flags
  */
-std::vector<std::string> getFlagsForCLANG(Config* config, BuildMode build_mode);
+vec<str> getFlagsForCLANG(Config* config, BuildMode build_mode) noexcept;
 
 #endif

@@ -1,33 +1,31 @@
 #include "include/shell.hpp"
 
-Shell::Shell(const std::string &command) : m_command(command), m_args({}) {
+Shell::Shell(const str &command) noexcept : m_command(command), m_args({}) {
   this->m_args.push_back(command);
 }
 
-void Shell::addArg(const std::string &arg) { this->m_args.push_back(arg); }
+void Shell::addArg(const str &arg) noexcept { this->m_args.push_back(arg); }
 
-void Shell::addArgs(const std::vector<std::string> &args) {
+void Shell::addArgs(const vec<str> &args) noexcept {
   this->m_args.insert(this->m_args.end(), args.begin(), args.end());
 }
 
-void Shell::flushArgs() { this->m_args.clear(); }
+void Shell::flushArgs() noexcept { this->m_args.clear(); }
 
-std::string Shell::joinArgs(const std::string &delimiter) {
+std::string Shell::joinArgs(const str &delimiter) noexcept {
   return std::accumulate(
       this->m_args.begin() + 1, this->m_args.end(), this->m_args[0],
-      [&delimiter](const std::string &a, const std::string &b) {
-        return a + delimiter + b;
-      });
+      [&delimiter](const str &a, const str &b) { return a + delimiter + b; });
 }
 
-void Shell::run() {
-  std::string args = Shell::joinArgs(" ");
+void Shell::run() noexcept {
+  str args = Shell::joinArgs(" ");
   system(args.c_str());
 }
 
 /* FLAG GET */
-std::vector<std::string> getFlagsForGNU(Config *config, BuildMode build_mode) {
-  std::vector<std::string> flags;
+vec<str> getFlagsForGNU(Config *config, BuildMode build_mode) noexcept {
+  vec<str> flags;
 
   if (build_mode == BuildMode::debug) {
     if (!config->debug) {
@@ -41,8 +39,7 @@ std::vector<std::string> getFlagsForGNU(Config *config, BuildMode build_mode) {
     if (!config->release) {
       flags = {"-Wall", "-Wextra", "-Wunreachable-code", "-DNDEBUG", "-O3"};
     } else if (config->release) {
-      std::string optimization =
-          "-O" + std::to_string(config->release->optimization);
+      str optimization = "-O" + std::to_string(config->release->optimization);
       flags = {"-Wall", "-Wextra", "-Wunreachable-code", "-DNDEBUG",
                optimization};
     }
@@ -50,9 +47,8 @@ std::vector<std::string> getFlagsForGNU(Config *config, BuildMode build_mode) {
   return flags;
 }
 
-std::vector<std::string> getFlagsForCLANG(Config *config,
-                                          BuildMode build_mode) {
-  std::vector<std::string> flags;
+vec<str> getFlagsForCLANG(Config *config, BuildMode build_mode) noexcept {
+  vec<str> flags;
 
   if (build_mode == BuildMode::debug) {
     if (!config->debug) {
@@ -68,8 +64,7 @@ std::vector<std::string> getFlagsForCLANG(Config *config,
     if (!config->release) {
       flags = {"-Wall", "-Wextra", "-Wunreachable-code", "-03", "-flto"};
     } else if (config->release) {
-      std::string optimization =
-          "-O" + std::to_string(config->release->optimization);
+      str optimization = "-O" + std::to_string(config->release->optimization);
       flags = {"-Wall", "-Wextra", "-Wunreachable-code", optimization, "-flto"};
     }
   }

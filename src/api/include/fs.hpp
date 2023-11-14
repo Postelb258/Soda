@@ -5,6 +5,8 @@
 #include <functional>
 #include <vector>
 
+#include "../../typedefs.hpp"
+
 /**
  * @brief find all files recursively from source and subdirectories matching
  * with predicate.
@@ -12,8 +14,8 @@
  * @param predicate predicate to which files are matching.
  * @returns vector of matched files
  */
-std::vector<std::filesystem::path> matchFiles(
-    const std::filesystem::path& source,
-    const std::function<bool(const std::filesystem::path&)>& predicate);
+vec<fs_path> matchFiles(
+    const fs_path& source,
+    const std::function<bool(const fs_path&)> predicate) noexcept;
 
 #endif
