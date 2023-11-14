@@ -38,7 +38,7 @@ class LinkStrategy {
 class CompilationStrategy {
  public:
   virtual void build() = 0;
-  virtual std::shared_ptr<LinkStrategy> link() = 0;
+  virtual std::unique_ptr<LinkStrategy> link() = 0;
 };
 
 #endif

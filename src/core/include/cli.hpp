@@ -2,6 +2,7 @@
 #define __CLI_H
 
 #include <CLI11.hpp>
+#include "../../typedefs.hpp"
 
 /**
  * @brief Interface has to be implemented for Subcommand
@@ -15,7 +16,7 @@ class Subcommand {
    * @param app reference to App from `CLI11` library
    * @return pointer to inner subcommand from `CLI11` library
    */
-  virtual CLI::App* setup(CLI::App& app) = 0;
+  virtual std::unique_ptr<CLI::App> setup(CLI::App& app) noexcept = 0;
   /**
    * @brief Handles subcommand after its parsing via callback
    */
@@ -35,7 +36,7 @@ class CLIApp {
    *
    * @param subcommands
    */
-  CLIApp(std::vector<std::shared_ptr<Subcommand>>& subcommands);
+  CLIApp(vec<std::unique_ptr<Subcommand>> subcommands);
   /**
    * @brief Runs handling of CLI
    *
