@@ -10,7 +10,7 @@ Package Package::deserialize(const opt<Table> &table) {
 }
 
 opt<Lib> Lib::deserialize(const opt<Table> &table) {
-  if (!table.has_value()) return Lib{};
+  if (!table.has_value()) return std::nullopt;
 
   return Lib{
 
@@ -18,25 +18,25 @@ opt<Lib> Lib::deserialize(const opt<Table> &table) {
 }
 
 opt<Debug> Debug::deserialize(const opt<Table> &table) {
-  if (!table.has_value()) return Debug{};
+  if (!table.has_value()) return std::nullopt;
 
   return Debug{.optimization = table->required<TOML_INT>("optimization")};
 }
 
 opt<Release> Release::deserialize(const opt<Table> &table) {
-  if (!table.has_value()) return Release{};
+  if (!table.has_value()) return std::nullopt;
 
   return Release{.optimization = table->required<TOML_INT>("optimization")};
 }
 
 opt<Dependencies> Dependencies::deserialize(const opt<Table> &table) {
-  if (!table.has_value()) return Dependencies{};
+  if (!table.has_value()) return std::nullopt;
 
   return Dependencies{.deps = table.value().get()};
 }
 
 opt<Aliases> Aliases::deserialize(const opt<Table> &table) {
-  if (!table.has_value()) return Aliases{};
+  if (!table.has_value()) return std::nullopt;
 
   return Aliases{.aliases = table.value().get()};
 }
