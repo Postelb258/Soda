@@ -9,9 +9,9 @@
 class Table {
  private:
   BasicValue m_table;
-
  public:
   Table(const BasicValue& table);
+  TOML_MAP get() const;
   Table required_table(const std::string& table) const;
   opt<Table> optional_table(const std::string& table) const;
   template <typename P>

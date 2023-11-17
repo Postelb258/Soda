@@ -2,6 +2,10 @@
 
 Table::Table(const BasicValue& table) : m_table(table) {}
 
+TOML_MAP Table::get() const {
+  return this->m_table.as_table();
+}
+
 Table Table::required_table(const std::string& table) const {
   return Table(toml::find<BasicValue>(this->m_table, table));
 }
