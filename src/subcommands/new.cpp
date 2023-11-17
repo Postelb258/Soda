@@ -11,7 +11,6 @@ CLI::App* New::setup(CLI::App& app) noexcept {
   sub->add_flag("-l,--lib", this->m_lib, "Use a library template");
 
   sub->add_flag("--cxx", this->m_cxx, "Use a CXX template");
-
   return sub;
 }
 
