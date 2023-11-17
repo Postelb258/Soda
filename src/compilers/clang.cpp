@@ -9,7 +9,7 @@ void Clang::build() {
   if (this->m_config == nullptr)
     throw std::runtime_error("Config file is not detected");
 
-  str source = this->m_config->lib ? "lib" : "src";
+  str source = this->m_config->lib != std::nullopt ? "lib" : "src";
   str cxx = fs_path(this->m_config->package.entry.str).extension();
   vec<str> flags = getFlagsForCLANG(this->m_config, this->m_mode);
 
@@ -27,12 +27,10 @@ void Clang::build() {
       [cxx](const fs_path& entry) { return entry.extension() == cxx; });
 
   std::unique_ptr<Shell> shell = std::make_unique<Shell>(Shell("clang"));
+  str lang = getLanguageFromExtension(cxx);
   for (const auto& source_file : source_files) {
     shell->addArg("-x");
-    shell->addArg(((cxx.find("pp") != std::string::npos)
-                       ? cxx.replace(cxx.find("pp"), sizeof("pp") - 1, "++")
-                       : cxx)
-                      .erase(0, 1));
+    shell->addArg(lang);
     shell->addArgs(flags);
     shell->addArg("-c");
     shell->addArg(source_file.generic_string());
@@ -41,7 +39,7 @@ void Clang::build() {
                   source_file.stem().generic_string() + ".o");
 
     shell->run();
-    shell->flushArgs();
+    shell->clearArgs();
   }
 }
 

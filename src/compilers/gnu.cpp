@@ -7,7 +7,7 @@ void GNU::build() {
   if (this->m_config == nullptr)
     throw std::runtime_error("Config file is not detected");
 
-  str source = this->m_config->lib ? "lib" : "src";
+  str source = this->m_config->lib != std::nullopt ? "lib" : "src";
   str cxx = fs_path(this->m_config->package.entry.str).extension();
   vec<str> flags = getFlagsForGNU(this->m_config, this->m_mode);
 
@@ -25,12 +25,10 @@ void GNU::build() {
       [cxx](const fs_path& entry) { return entry.extension() == cxx; });
 
   std::unique_ptr<Shell> shell = std::make_unique<Shell>(Shell("gcc"));
+  str lang = getLanguageFromExtension(cxx);
   for (const auto& source_file : source_files) {
     shell->addArg("-x");
-    shell->addArg(((cxx.find("pp") != std::string::npos)
-                       ? cxx.replace(cxx.find("pp"), sizeof("pp") - 1, "++")
-                       : cxx)
-                      .erase(0, 1));
+    shell->addArg(lang);
     shell->addArgs(flags);
     shell->addArg("-o");
     shell->addArg(target.generic_string() +
@@ -38,7 +36,7 @@ void GNU::build() {
     shell->addArg(source_file.filename());
 
     shell->run();
-    shell->flushArgs();
+    shell->clearArgs();
   }
 }
 
