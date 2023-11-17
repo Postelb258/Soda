@@ -17,7 +17,7 @@ class Subcommand {
    * @param app reference to App from `CLI11` library
    * @return pointer to inner subcommand from `CLI11` library
    */
-  virtual std::unique_ptr<CLI::App> setup(CLI::App& app) noexcept = 0;
+  virtual CLI::App* setup(CLI::App& app) noexcept = 0;
   /**
    * @brief Handles subcommand after its parsing via callback
    */

@@ -3,12 +3,12 @@
 Build::Build(std::shared_ptr<Config> config)
     : m_config(config), m_mode(BuildMode::debug) {}
 
-std::unique_ptr<CLI::App> Build::setup(CLI::App& app) noexcept {
+CLI::App* Build::setup(CLI::App& app) noexcept {
   CLI::App* sub = app.add_subcommand("build", "builds a project");
   bool release{false};
   sub->add_flag("-r,--release", release, "Builds in a release mode");
   this->m_mode = release ? BuildMode::release : BuildMode::debug;
-  return std::unique_ptr<CLI::App>(sub);
+  return sub;
 }
 
 void Build::handle() {
