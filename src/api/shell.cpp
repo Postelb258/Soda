@@ -3,14 +3,13 @@
 Shell::Shell(const str &command) noexcept : m_command(command), m_args({}) {
   this->m_args.push_back(command);
 }
-
 void Shell::addArg(const str &arg) noexcept { this->m_args.push_back(arg); }
 
 void Shell::addArgs(const vec<str> &args) noexcept {
   this->m_args.insert(this->m_args.end(), args.begin(), args.end());
 }
 
-void Shell::flushArgs() noexcept { this->m_args.clear(); }
+void Shell::clearArgs() noexcept { this->m_args.resize(1); }
 
 std::string Shell::joinArgs(const str &delimiter) noexcept {
   return std::accumulate(

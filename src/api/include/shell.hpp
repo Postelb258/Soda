@@ -39,7 +39,7 @@ class Shell {
   /**
    * @brief clear all arguments
    */
-  void flushArgs() noexcept;
+  void clearArgs() noexcept;
   /**
    * @brief run shell command with arguments
    */
