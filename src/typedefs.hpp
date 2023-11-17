@@ -9,11 +9,12 @@
 typedef toml::basic_value<toml::discard_comments, std::unordered_map,
                           std::vector>
     BasicValue;
+typedef toml::string TOML_STR;
+typedef toml::integer TOML_INT;
+typedef toml::table TOML_MAP;
 
 typedef std::string str;
-typedef std::string_view sview;
 typedef std::filesystem::path fs_path;
-typedef std::map<std::string_view, std::string_view> smap;
 
 template <typename T>
 using opt = std::optional<T>;
