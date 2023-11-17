@@ -14,7 +14,7 @@ class Build : public Subcommand {
 
  public:
   Build(std::shared_ptr<Config> config);
-  std::unique_ptr<CLI::App> setup(CLI::App& app) noexcept override;
+  CLI::App* setup(CLI::App& app) noexcept override;
   void handle() override;
 };
 

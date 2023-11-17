@@ -2,7 +2,7 @@
 
 New::New() {}
 
-std::unique_ptr<CLI::App> New::setup(CLI::App& app) noexcept {
+CLI::App* New::setup(CLI::App& app) noexcept {
   CLI::App* sub = app.add_subcommand("new", "Creates a new Soda project");
   sub->add_option("path", this->m_path, "Specifies the path of project")
       ->required(true)
@@ -12,7 +12,7 @@ std::unique_ptr<CLI::App> New::setup(CLI::App& app) noexcept {
 
   sub->add_flag("--cxx", this->m_cxx, "Use a CXX template");
 
-  return std::unique_ptr<CLI::App>(sub);
+  return sub;
 }
 
 void New::handle() {
