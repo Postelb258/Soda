@@ -29,6 +29,7 @@ class LinkStrategy {
   virtual void makeExecutable() = 0;
   virtual void makeStaticLibrary() = 0;
   virtual void makeSharedLibrary() = 0;
+  virtual ~LinkStrategy() = default;
 };
 
 /**
@@ -39,6 +40,7 @@ class CompilationStrategy {
  public:
   virtual void build() = 0;
   virtual std::unique_ptr<LinkStrategy> link() = 0;
+  virtual ~CompilationStrategy() = default;
 };
 
 #endif
