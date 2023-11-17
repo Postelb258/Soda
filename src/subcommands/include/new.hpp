@@ -12,7 +12,7 @@ class New : public Subcommand {
 
  public:
   New();
-  std::unique_ptr<CLI::App> setup(CLI::App& app) noexcept override;
+  CLI::App* setup(CLI::App& app) noexcept override;
   void handle() override;
 };
 
