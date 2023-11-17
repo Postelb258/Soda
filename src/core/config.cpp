@@ -1,16 +1,16 @@
 #include "include/config.hpp"
 
 Package Package::deserialize(const opt<Table> &table) {
-  checkTable<Package>(table);
+  if (!table.has_value()) return Package{};
 
-  return Package{.name = table->required<sview>("name"),
-                 .entry = table->required<sview>("entry"),
-                 .version = table->required<sview>("version"),
-                 .description = table->optional<sview>("description")};
+  return Package{.name = table->required<TOML_STR>("name"),
+                 .entry = table->required<TOML_STR>("entry"),
+                 .version = table->required<TOML_STR>("version"),
+                 .description = table->optional<TOML_STR>("description")};
 }
 
 opt<Lib> Lib::deserialize(const opt<Table> &table) {
-  checkTable<Lib>(table);
+  if (!table.has_value()) return Lib{};
 
   return Lib{
 
@@ -18,35 +18,30 @@ opt<Lib> Lib::deserialize(const opt<Table> &table) {
 }
 
 opt<Debug> Debug::deserialize(const opt<Table> &table) {
-  checkTable<Debug>(table);
+  if (!table.has_value()) return Debug{};
 
-  return Debug{.optimization = table->required<short>("optimization")};
+  return Debug{.optimization = table->required<TOML_INT>("optimization")};
 }
 
 opt<Release> Release::deserialize(const opt<Table> &table) {
-  checkTable<Release>(table);
+  if (!table.has_value()) return Release{};
 
-  return Release{.optimization = table->required<short>("optimization")};
+  return Release{.optimization = table->required<TOML_INT>("optimization")};
 }
 
 opt<Dependencies> Dependencies::deserialize(const opt<Table> &table) {
-  checkTable<Dependencies>(table);
+  if (!table.has_value()) return Dependencies{};
 
-  return Dependencies{.deps = table->required<smap>("dependencies")};
+  return Dependencies{.deps = table.value().get() };
 }
 
 opt<Aliases> Aliases::deserialize(const opt<Table> &table) {
-  checkTable<Aliases>(table);
+  if (!table.has_value()) return Aliases{};
 
-  return Aliases{.aliases = table->required<smap>("aliases")};
+  return Aliases{.aliases = table.value().get() };
 }
 
-template <typename S>
-S checkTable(const opt<Table> &table) {
-  if (!table.has_value()) return S{};
-}
-
-std::unique_ptr<Config> Config::load(const std::string &path) {
+std::shared_ptr<Config> Config::load(const std::string &path) {
   struct stat info;
   if (stat(path.c_str(), &info) != 0) return nullptr;
 
@@ -56,13 +51,13 @@ std::unique_ptr<Config> Config::load(const std::string &path) {
       Package::deserialize(config_table.required_table("package"));
   s_config.lib = Lib::deserialize(config_table.optional_table("lib"));
   s_config.debug =
-      Debug::deserialize(config_table.optional_table("debug").value());
+      Debug::deserialize(config_table.optional_table("debug"));
   s_config.release =
-      Release::deserialize(config_table.optional_table("release").value());
+      Release::deserialize(config_table.optional_table("release"));
   s_config.dependencies = Dependencies::deserialize(
-      config_table.optional_table("dependencies").value());
+      config_table.optional_table("dependencies"));
   s_config.aliases =
-      Aliases::deserialize(config_table.optional_table("aliases").value());
+      Aliases::deserialize(config_table.optional_table("aliases"));
 
-  return std::make_unique<Config>(s_config);
+  return std::make_shared<Config>(s_config);
 }
