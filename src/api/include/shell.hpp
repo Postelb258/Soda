@@ -53,7 +53,8 @@ class Shell {
  * @param build_mode
  * @return flags
  */
-vec<str> getFlagsForGNU(Config* config, BuildMode build_mode) noexcept;
+vec<str> getFlagsForGNU(std::shared_ptr<Config> config,
+                        BuildMode build_mode) noexcept;
 /**
  * @brief Get the Flags For Clang compiler according to build mode
  *
@@ -61,6 +62,7 @@ vec<str> getFlagsForGNU(Config* config, BuildMode build_mode) noexcept;
  * @param build_mode
  * @return flags
  */
-vec<str> getFlagsForCLANG(Config* config, BuildMode build_mode) noexcept;
+vec<str> getFlagsForCLANG(std::shared_ptr<Config> config,
+                          BuildMode build_mode) noexcept;
 
 #endif

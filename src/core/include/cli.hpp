@@ -37,7 +37,7 @@ class CLIApp {
    *
    * @param subcommands
    */
-  CLIApp(vec<std::unique_ptr<Subcommand>> subcommands);
+  CLIApp(vec<std::shared_ptr<Subcommand>> subcommands);
   /**
    * @brief Runs handling of CLI
    *

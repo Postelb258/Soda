@@ -9,11 +9,11 @@
 
 class Build : public Subcommand {
  private:
-  std::unique_ptr<Config> m_config;
+  std::shared_ptr<Config> m_config;
   BuildMode m_mode;
 
  public:
-  Build(std::unique_ptr<Config> config);
+  Build(std::shared_ptr<Config> config);
   std::unique_ptr<CLI::App> setup(CLI::App& app) noexcept override;
   void handle() override;
 };

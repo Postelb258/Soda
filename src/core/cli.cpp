@@ -1,6 +1,6 @@
 #include "include/cli.hpp"
 
-CLIApp::CLIApp(vec<std::unique_ptr<Subcommand>> subcommands)
+CLIApp::CLIApp(vec<std::shared_ptr<Subcommand>> subcommands)
     : m_app(new CLI::App()) {
   for (auto &subcommand : subcommands) {
     std::unique_ptr<CLI::App> subcmd = subcommand->setup(*this->m_app);

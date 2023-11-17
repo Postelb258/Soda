@@ -1,7 +1,7 @@
 #include "include/build.hpp"
 
-Build::Build(std::unique_ptr<Config> config)
-    : m_config(std::move(config)), m_mode(BuildMode::debug) {}
+Build::Build(std::shared_ptr<Config> config)
+    : m_config(config), m_mode(BuildMode::debug) {}
 
 std::unique_ptr<CLI::App> Build::setup(CLI::App& app) noexcept {
   CLI::App* sub = app.add_subcommand("build", "builds a project");
@@ -13,7 +13,7 @@ std::unique_ptr<CLI::App> Build::setup(CLI::App& app) noexcept {
 
 void Build::handle() {
   std::unique_ptr<Clang> clang =
-      std::make_unique<Clang>(Clang(std::move(this->m_config), this->m_mode));
+      std::make_unique<Clang>(Clang(this->m_config, this->m_mode));
   clang->build();
   clang->link()->makeExecutable();
 }

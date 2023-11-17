@@ -24,7 +24,8 @@ void Shell::run() noexcept {
 }
 
 /* FLAG GET */
-vec<str> getFlagsForGNU(Config *config, BuildMode build_mode) noexcept {
+vec<str> getFlagsForGNU(std::shared_ptr<Config> config,
+                        BuildMode build_mode) noexcept {
   vec<str> flags;
 
   if (build_mode == BuildMode::debug) {
@@ -47,7 +48,8 @@ vec<str> getFlagsForGNU(Config *config, BuildMode build_mode) noexcept {
   return flags;
 }
 
-vec<str> getFlagsForCLANG(Config *config, BuildMode build_mode) noexcept {
+vec<str> getFlagsForCLANG(std::shared_ptr<Config> config,
+                          BuildMode build_mode) noexcept {
   vec<str> flags;
 
   if (build_mode == BuildMode::debug) {

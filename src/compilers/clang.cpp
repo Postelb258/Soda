@@ -2,16 +2,16 @@
 
 #include <string>
 
-Clang::Clang(std::unique_ptr<Config> config, BuildMode build_mode)
-    : m_config(std::move(config)), m_mode(build_mode) {}
+Clang::Clang(std::shared_ptr<Config> config, BuildMode build_mode)
+    : m_config(config), m_mode(build_mode) {}
 
 void Clang::build() {
   if (this->m_config == nullptr)
     throw std::runtime_error("Config file is not detected");
 
   str source = this->m_config->lib ? "lib" : "src";
-  str cxx = fs_path(this->m_config->package.entry).extension();
-  vec<str> flags = getFlagsForCLANG(this->m_config.get(), this->m_mode);
+  str cxx = fs_path(this->m_config->package.entry.str).extension();
+  vec<str> flags = getFlagsForCLANG(this->m_config, this->m_mode);
 
   str mode_dir = this->m_mode == BuildMode::release ? "release" : "debug";
   fs_path target("target/" + mode_dir + "/__objs/");
@@ -56,13 +56,13 @@ std::unique_ptr<LinkStrategy> Clang::link() {
     shell->addArg(object_path.generic_string());
   }
   shell->addArg("-o");
-  return std::make_unique<ClangLink>(std::move(this->m_config),
-                                     std::move(shell), mode_dir);
+  return std::make_unique<ClangLink>(this->m_config, std::move(shell),
+                                     mode_dir);
 }
 
-ClangLink::ClangLink(std::unique_ptr<Config> config,
+ClangLink::ClangLink(std::shared_ptr<Config> config,
                      std::unique_ptr<Shell> shell, const str& mode_dir)
-    : m_config(std::move(config)),
+    : m_config(config),
       m_shell(std::move(shell)),
       m_location(fs_path("target/" + mode_dir + "/")) {}
 
