@@ -32,13 +32,13 @@ opt<Release> Release::deserialize(const opt<Table> &table) {
 opt<Dependencies> Dependencies::deserialize(const opt<Table> &table) {
   if (!table.has_value()) return Dependencies{};
 
-  return Dependencies{.deps = table.value().get() };
+  return Dependencies{.deps = table.value().get()};
 }
 
 opt<Aliases> Aliases::deserialize(const opt<Table> &table) {
   if (!table.has_value()) return Aliases{};
 
-  return Aliases{.aliases = table.value().get() };
+  return Aliases{.aliases = table.value().get()};
 }
 
 std::shared_ptr<Config> Config::load(const std::string &path) {
@@ -50,12 +50,11 @@ std::shared_ptr<Config> Config::load(const std::string &path) {
   s_config.package =
       Package::deserialize(config_table.required_table("package"));
   s_config.lib = Lib::deserialize(config_table.optional_table("lib"));
-  s_config.debug =
-      Debug::deserialize(config_table.optional_table("debug"));
+  s_config.debug = Debug::deserialize(config_table.optional_table("debug"));
   s_config.release =
       Release::deserialize(config_table.optional_table("release"));
-  s_config.dependencies = Dependencies::deserialize(
-      config_table.optional_table("dependencies"));
+  s_config.dependencies =
+      Dependencies::deserialize(config_table.optional_table("dependencies"));
   s_config.aliases =
       Aliases::deserialize(config_table.optional_table("aliases"));
 

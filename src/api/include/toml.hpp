@@ -9,6 +9,7 @@
 class Table {
  private:
   BasicValue m_table;
+
  public:
   Table(const BasicValue& table);
   TOML_MAP get() const;
