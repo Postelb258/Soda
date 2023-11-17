@@ -15,7 +15,7 @@ class Shell {
  private:
   str m_command;
   vec<str> m_args;
-  str joinArgs(const std::string& delimiter) noexcept;
+  str joinArgs(const str& delimiter) noexcept;
 
  public:
   /**
