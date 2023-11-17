@@ -12,12 +12,12 @@ class Table {
  public:
   Table(const BasicValue& table);
   TOML_MAP get() const;
-  Table required_table(const std::string& table) const;
-  opt<Table> optional_table(const std::string& table) const;
+  Table required_table(const str& table) const;
+  opt<Table> optional_table(const str& table) const;
   template <typename P>
-  P required(const std::string& key) const;
+  P required(const str& key) const;
   template <typename P>
-  opt<P> optional(const std::string& key) const;
+  opt<P> optional(const str& key) const;
 };
 
 #endif
