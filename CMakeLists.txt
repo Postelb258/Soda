@@ -8,7 +8,7 @@ file(GLOB CORE_SOURCES "src/core/*.cpp")
 file(GLOB API_SOURCES "src/api/*.cpp")
 file(GLOB SUBCOMMANDS_SOURCES "src/subcommands/*.cpp")
 file(GLOB COMPILERS_SOURCES "src/compilers/*.cpp")
-add_executable(Soda src/main.cpp ${CORE_SOURCES} ${API_SOURCES} ${SUBCOMMANDS_SOURCES} ${COMPILERS_SOURCES})
+add_executable(Soda src/main.cpp ${API_SOURCES} ${CORE_SOURCES} ${SUBCOMMANDS_SOURCES} ${COMPILERS_SOURCES})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
