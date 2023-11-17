@@ -14,3 +14,20 @@ vec<fs_path> matchFiles(
 
   return matched_paths;
 }
+
+str getLanguageFromExtension(
+    const str& _extension
+) {
+  size_t extension_dot_pos = _extension.find_last_of(".");
+  if (extension_dot_pos != str::npos) {
+    str extension = _extension.substr(extension_dot_pos + 1);
+    if (extension == "c")
+      return "c";
+    else if (extension == "cpp")
+      return "c++";
+    else
+      throw std::runtime_error("[error] `"+extension+"` is not supported");
+  } else {
+    throw std::runtime_error("[error] extension dot is not found");
+  }
+}

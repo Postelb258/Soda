@@ -18,4 +18,8 @@ vec<fs_path> matchFiles(
     const fs_path& source,
     const std::function<bool(const fs_path&)> predicate) noexcept;
 
+str getLanguageFromExtension(
+    const str& _extension
+);
+
 #endif
